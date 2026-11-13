@@ -1,4 +1,4 @@
-// 1. TODOS LOS 32 DEPARTAMENTOS DE COLOMBIA + BOGOTÁ D.C. Y SUS CIUDADES
+// 1.  TODOS LOS 32 DEPARTAMENTOS DE COLOMBIA + BOGOTÁ D.C. Y SUS CIUDADES
     const COLOMBIA_GEO = {
       "Amazonas": ["Leticia", "Puerto Nariño"],
       "Antioquia": ["Medellín", "Envigado", "Itagüí", "Bello", "Rionegro", "Apartadó", "Turbo", "Sabaneta", "La Ceja"],
