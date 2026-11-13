@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="es" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mercaflow Colombia | Gestión de Inventario & Red de Proveedores B2B/B2C</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter, Plus Jakarta Sans, Roboto, Merriweather & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Merriweather:wght@300;400;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <!-- Mapas interactivos Leaflet + OpenStreetMap -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#4f46e5',
+              600: '#4338ca',
+              700: '#3730a3',
+              900: '#1e1b4b',
+            },
+            emeraldCol: {
+              500: '#10b981',
+              600: '#059669',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200 min-h-screen">
+
+  <!-- ===================================================================== -->
+  <!-- PANTALLA 1: AUTENTICACIÓN (LOGIN / REGISTRO CON CAMPOS 100% VACÍOS)    -->
+  <!-- ===================================================================== -->
+  <section id="auth-screen" class="min-h-screen flex flex-col lg:flex-row">
+    <!-- Panel Izquierdo: Propuesta de Valor para Inversionistas y Empresas -->
+    <div class="lg:w-5/12 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-8 lg:p-12 flex flex-col justify-between relative overflow-hidden">
+      <div class="absolute -top-24 -left-24 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute bottom-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10">
+        <div class="flex items-center justify-between gap-3 mb-10">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-indigo-500 to-emerald-400 flex items-center justify-center shadow-lg">
+              <i class="fa-solid fa-boxes-stacked text-white text-xl"></i>
+            </div>
+            <div>
+              <span class="font-display font-extrabold text-2xl tracking-tight">Mercaflow</span>
+              <span class="ml-1.5 text-xs font-semibold uppercase tracking-widest px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Colombia</span>
+            </div>
+          </div>
+        </div>
+
+        <h1 class="font-display text-3xl lg:text-4xl font-extrabold leading-tight mb-4">
+          ¡Bienvenido a Mercaflow!
+        </h1>
+        <p class="text-slate-300 text-sm lg:text-base leading-relaxed mb-8 max-w-xl">
+          Tu aliado para controlar inventarios, fechas de vencimiento y abastecimiento de supermercados, restaurantes y comercios en Colombia.
+        </p>
+      </div>
+
+      <div class="relative z-10 mt-10 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-400">
+        <span>Edición SaaS B2B/B2C • Precios en COP</span>
+        <span class="flex items-center gap-1.5 text-emerald-400 font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Red Activa en Colombia
+        </span>
+      </div>
+    </div>
+
+    <!-- Panel Derecho: Formularios de Acceso y Registro (SIN PLACEHOLDERS NI VALORES PRELLENADOS) -->
+    <div class="lg:w-7/12 flex items-center justify-center p-6 sm:p-10 lg:p-14 bg-white dark:bg-slate-950">
+      <div class="w-full max-w-lg">
+        <!-- Selector de acceso y registro -->
+        <!-- Selector de Pestañas -->
+        <div class="flex p-1.5 bg-slate-100 dark:bg-slate-900 rounded-2xl mb-8 border border-slate-200 dark:border-slate-800">
+          <button type="button" id="tab-login" onclick="switchAuthTab('login')" class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm">
+            Iniciar Sesión
+          </button>
+          <button type="button" id="tab-register" onclick="switchAuthTab('register')" class="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+            Crear Cuenta
+          </button>
+        </div>
+
+        <!-- Mensaje de validación de Auth -->
+        <div id="auth-alert" class="hidden mb-5 p-3.5 rounded-xl text-sm font-medium border"></div>
+
+        <!-- FORMULARIO 1: INICIAR SESIÓN (Inputs completamente vacíos, sin placeholders) -->
+        <form id="login-form" onsubmit="handleLoginSubmit(event)" autocomplete="off" class="space-y-5">
+          <div>
+            <h2 class="font-display text-2xl font-bold text-slate-900 dark:text-white">Bienvenido de nuevo</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Ingresa tus credenciales registradas para administrar tu inventario.</p>
+          </div>
+
+          <div>
+            <label for="login-email" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              Correo electrónico
+            </label>
+            <input
+              type="email"
+              id="login-email"
+              name="login-email"
+              value=""
+              required
+              autocomplete="off"
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label for="login-password" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              Contraseña única
+            </label>
+            <div class="relative">
+              <input
+                type="password"
+                id="login-password"
+                name="login-password"
+                value=""
+                required
+                autocomplete="new-password"
+                class="w-full pl-4 pr-12 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+              />
+              <button
+                type="button"
+                onclick="togglePasswordVisibility('login-password', 'login-eye-icon')"
+                aria-label="Mostrar u ocultar contraseña"
+                class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition"
+              >
+                <i id="login-eye-icon" class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            id="btn-login-submit"
+            class="w-full py-3.5 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-lg shadow-indigo-600/25 transition flex items-center justify-center gap-2"
+          >
+            <span>Iniciar Sesión</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <!-- FORMULARIO 2: CREAR CUENTA (Todos los campos completamente vacíos, sin placeholders) -->
+        <form id="register-form" onsubmit="handleRegisterSubmit(event)" autocomplete="off" class="hidden space-y-4">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <h2 class="font-display text-2xl font-bold text-slate-900 dark:text-white">Registro Empresarial</h2>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Al crear tu cuenta recibirás automáticamente todas las funciones <strong>PRO</strong>.</p>
+            </div>
+            <button type="button" onclick="switchAuthTab('login')" class="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition">
+              ← Volver al inicio
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="reg-business" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                Nombre del Negocio
+              </label>
+              <input
+                type="text"
+                id="reg-business"
+                name="reg-business"
+                value=""
+                required
+                autocomplete="off"
+                class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition"
+              />
+            </div>
+
+            <div>
+              <label for="reg-role" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                Rol Comercial
+              </label>
+              <select
+                id="reg-role"
+                name="reg-role"
+                required
+                class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition"
+              >
+                <option value="" selected disabled></option>
+                <option value="Mayorista">Mayorista</option>
+                <option value="Minorista">Minorista</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label for="reg-business-type" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              Tipo de negocio
+            </label>
+            <select id="reg-business-type" name="reg-business-type" required
+              class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
+              <option value="" selected disabled>Selecciona tu tipo de negocio</option>
+              <option value="Supermercado">Supermercado</option>
+              <option value="Restaurante">Restaurante</option>
+              <option value="Tienda / Minimercado">Tienda / Minimercado</option>
+              <option value="Distribuidor / Mayorista">Distribuidor / Mayorista</option>
+              <option value="Otro comercio">Otro comercio</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="reg-email" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              Correo electrónico
+            </label>
+            <input
+              type="email"
+              id="reg-email"
+              name="reg-email"
+              value=""
+              required
+              autocomplete="off"
+              class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label for="reg-password" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              Contraseña única
+            </label>
+            <div class="relative">
+              <input
+                type="password"
+                id="reg-password"
+                name="reg-password"
+                value=""
+                required
+                autocomplete="new-password"
+                class="w-full pl-4 pr-12 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition"
+              />
+              <button
+                type="button"
+                onclick="togglePasswordVisibility('reg-password', 'reg-eye-icon')"
+                aria-label="Mostrar u ocultar contraseña"
+                class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition"
+              >
+                <i id="reg-eye-icon" class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="reg-department" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                Departamento
+              </label>
+              <select
+                id="reg-department"
+                name="reg-department"
+                required
+                onchange="populateCities('reg-department', 'reg-city', false)"
+                class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition"
+              >
+                <option value="" selected disabled></option>
+              </select>
+            </div>
+
+            <div>
+              <label for="reg-city" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                Ciudad / Municipio
+              </label>
+              <select
+                id="reg-city"
+                name="reg-city"
+                required
+                class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition"
+              >
+                <option value="" selected disabled></option>
+              </select>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            id="btn-register-submit"
+            class="w-full py-3.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-lg shadow-emerald-600/25 transition flex items-center justify-center gap-2 mt-2"
+          >
+            <span>Crear Cuenta con Acceso PRO</span>
+            <i class="fa-solid fa-crown"></i>
+          </button>
+        </form>
+
+        <!-- Separador y Acceso Demo Discreto para Inversionistas -->
+        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <span class="text-xs text-slate-400">¿Evaluando el producto como inversionista?</span>
+          <button
+            type="button"
+            onclick="quickInvestorDemo()"
+            class="text-xs font-semibold px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition flex items-center gap-2"
+          >
+            <i class="fa-solid fa-rocket text-indigo-500"></i>
+            <span>Acceso Demo Rápido (Inversionistas)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- PANTALLA DE CARGA ANIMADA (TRANSICIÓN POST-AUTENTICACIÓN)              -->
+  <!-- ===================================================================== -->
+  <div id="loading-overlay" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-center text-white p-6">
+    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-emerald-400 flex items-center justify-center shadow-2xl mb-6 animate-bounce">
+      <i class="fa-solid fa-boxes-stacked text-3xl text-white"></i>
+    </div>
+    <h2 id="loading-title" class="font-display text-xl sm:text-2xl font-bold text-center mb-2">Sincronizando tu espacio comercial...</h2>
+    <p id="loading-subtitle" class="text-sm text-slate-400 text-center max-w-md mb-6">Cargando base de datos de inventario, trazabilidad de dispositivos y nodos activos en Colombia.</p>
+    <div class="w-64 h-2 bg-slate-800 rounded-full overflow-hidden">
+      <div id="loading-bar" class="h-full bg-gradient-to-r from-indigo-500 to-emerald-400 w-0 transition-all duration-300"></div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- PANTALLA 2: PLATAFORMA PRINCIPAL (DASHBOARD SAAS B2B/B2C)             -->
+  <!-- ===================================================================== -->
+  <div id="app-shell" class="hidden min-h-screen flex flex-col">
+    
+    <!-- Barra de Navegación Superior -->
+    <header class="sticky top-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+        <!-- Marca y ubicación del negocio -->
+        <div class="flex items-center gap-2.5">
+          <button
+            onclick="goToDashboardHome()"
+            title="Volver al Panel Principal de Inicio"
+            class="flex items-center gap-2.5 text-left group"
+          >
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-emerald-500 flex items-center justify-center text-white shadow group-hover:scale-105 transition">
+              <i class="fa-solid fa-boxes-stacked"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-display font-bold text-lg text-slate-900 dark:text-white">Mercaflow</span>
+                <span id="header-role-badge" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300">Mayorista</span>
+              </div>
+              <p id="header-location-text" class="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                <i class="fa-solid fa-location-dot text-emerald-500"></i> Cali, Valle del Cauca
+              </p>
+            </div>
+          </button>
+        </div>
+
+        <!-- Navegación Desktop -->
+        <nav class="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl">
+          <button onclick="switchSection('inventory')" id="nav-inventory" class="nav-btn px-3.5 py-1.5 rounded-lg text-sm font-semibold bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm transition">
+            <i class="fa-solid fa-warehouse mr-1.5"></i>Inventario & Auditoría
+          </button>
+          <button onclick="switchSection('directory')" id="nav-directory" class="nav-btn px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition">
+            <i class="fa-solid fa-map-location-dot mr-1.5"></i>Proveedores & Mapa
+          </button>
+          <button onclick="switchSection('analytics')" id="nav-analytics" class="nav-btn px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition">
+            <i class="fa-solid fa-chart-line mr-1.5"></i>Lo Más Vendido
+          </button>
+        </nav>
+
+        <!-- Acciones Derecha: Plan, Notificaciones, Ajustes, Salir -->
+        <div class="flex items-center gap-2">
+          <!-- Botón de Estado del Plan (Gratis vs Pro) -->
+          <button onclick="openPricingModal()" id="plan-status-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition shadow-sm bg-emerald-50 border-emerald-300 text-emerald-800 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:border-emerald-700 dark:text-emerald-300">
+            <i class="fa-solid fa-crown"></i>
+            <span id="plan-status-label">Plan PRO Activo</span>
+          </button>
+
+          <!-- Ajustes de apariencia y preferencias -->
+          <button
+            type="button"
+            onclick="openSettingsModal('prefs')"
+            title="Ajustes: cambiar entre modo claro y oscuro"
+            aria-label="Abrir ajustes de apariencia"
+            class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center transition"
+          >
+            <i class="fa-solid fa-gear"></i>
+          </button>
+
+          <!-- Campana de Notificaciones de Promociones -->
+          <div class="relative">
+            <button onclick="toggleNotificationsPanel()" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 transition relative" aria-label="Notificaciones de promociones">
+              <i class="fa-solid fa-bell"></i>
+              <span id="notif-badge" class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center shadow">3</span>
+            </button>
+
+            <!-- Dropdown de Notificaciones -->
+            <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden z-50">
+              <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50">
+                <div>
+                  <h3 class="font-display font-bold text-sm">Alertas de Promociones</h3>
+                  <p class="text-[11px] text-slate-500">Descuentos activos de proveedores en Colombia</p>
+                </div>
+                <button onclick="markAllNotificationsRead()" class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Limpiar</button>
+              </div>
+              <div id="notifications-list" class="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800"></div>
+            </div>
+          </div>
+
+          <!-- Regresar a Pantalla de Inicio / Cerrar Sesión -->
+          <button
+            onclick="logoutUser()"
+            title="Regresar a Pantalla de Inicio"
+            class="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 flex items-center justify-center transition"
+          >
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navegación Móvil -->
+      <div class="flex md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-2 py-1.5 gap-1">
+        <button onclick="switchSection('inventory')" id="m-nav-inventory" class="flex-1 py-2 rounded-lg text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400">
+          <i class="fa-solid fa-warehouse mr-1"></i>Inventario
+        </button>
+        <button onclick="switchSection('directory')" id="m-nav-directory" class="flex-1 py-2 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400">
+          <i class="fa-solid fa-map-location-dot mr-1"></i>Proveedores
+        </button>
+        <button onclick="switchSection('analytics')" id="m-nav-analytics" class="flex-1 py-2 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400">
+          <i class="fa-solid fa-chart-line mr-1"></i>Más Vendido
+        </button>
+      </div>
+    </header>
+
+    <!-- Banner de Alerta Global / Toast -->
+    <div id="global-toast" class="hidden fixed bottom-5 right-5 z-50 max-w-md bg-slate-900 dark:bg-slate-800 text-white px-4 py-3.5 rounded-2xl shadow-2xl border border-slate-700 flex items-start gap-3 transition-all">
+      <div id="toast-icon" class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <div class="flex-1 text-sm">
+        <p id="toast-title" class="font-bold">Acción completada</p>
+        <p id="toast-message" class="text-xs text-slate-300 mt-0.5"></p>
+      </div>
+      <button onclick="hideToast()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+      <!-- ================================================================= -->
+      <!-- PANEL DE ASISTENTE DE IA CONTEXTUAL ("AYUDA IA")                  -->
+      <!-- ================================================================= -->
+      <div id="ai-assistant-panel" class="bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-950 text-white rounded-2xl border border-indigo-500/30 p-5 shadow-lg transition-all">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
+          <div class="flex items-start gap-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-500 to-emerald-400 flex items-center justify-center shrink-0 shadow-md">
+              <i class="fa-solid fa-robot text-white text-lg"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-display font-bold text-base">Ayuda IA • Copiloto Comercial Mercaflow</span>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Modo IA Activo</span>
+              </div>
+              <p id="ai-dynamic-tip" class="text-xs sm:text-sm text-indigo-100 mt-1 leading-relaxed">
+                Analizando tu bodega...
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onclick="refreshAiMotivation()"
+              class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold text-white transition flex items-center gap-1.5"
+            >
+              <i class="fa-solid fa-sparkles text-amber-300"></i>
+              <span>Nueva Sugerencia</span>
+            </button>
+            <button
+              type="button"
+              onclick="toggleAiMode(false)"
+              class="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 text-xs font-semibold transition"
+              title="Desactivar Modo IA (puedes reactivarlo en Ajustes)"
+            >
+              Ocultar IA
+            </button>
+          </div>
+        </div>
+
+        <!-- Botones de Consulta Estratégica de Ayuda IA -->
+        <div class="pt-4 space-y-3">
+          <div class="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onclick="selectAiTopic('why_this')"
+              id="ai-topic-why_this"
+              class="ai-topic-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow transition"
+            >
+              <i class="fa-solid fa-trophy mr-1.5 text-amber-300"></i>¿Por qué elegir este software sobre los demás?
+            </button>
+            <button
+              type="button"
+              onclick="selectAiTopic('why_created')"
+              id="ai-topic-why_created"
+              class="ai-topic-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-slate-200 transition"
+            >
+              <i class="fa-solid fa-lightbulb mr-1.5 text-emerald-300"></i>¿Por qué se creó?
+            </button>
+            <button
+              type="button"
+              onclick="selectAiTopic('how_implement')"
+              id="ai-topic-how_implement"
+              class="ai-topic-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-slate-200 transition"
+            >
+              <i class="fa-solid fa-diagram-project mr-1.5 text-sky-300"></i>¿Cómo se implementaría en sus empresas?
+            </button>
+          </div>
+
+          <div id="ai-topic-answer" class="p-4 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm text-slate-200 leading-relaxed"></div>
+        </div>
+      </div>
+
+      <!-- Resumen Superior (KPIs de Negocio) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Referencias Activas</span>
+            <span class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center"><i class="fa-solid fa-box"></i></span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span id="kpi-total-products" class="font-display text-2xl font-extrabold">0</span>
+            <span id="kpi-plan-limit" class="text-xs font-medium text-slate-500">/ 3 máx. (Gratis)</span>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Alertas de Reposición</span>
+            <span class="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center"><i class="fa-solid fa-triangle-exclamation"></i></span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span id="kpi-low-stock" class="font-display text-2xl font-extrabold text-rose-600 dark:text-rose-400">0</span>
+            <span class="text-xs text-slate-500">Bajo stock / Agotados</span>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Proveedores Suscritos</span>
+            <span class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-handshake"></i></span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span id="kpi-suppliers-count" class="font-display text-2xl font-extrabold">12</span>
+            <span class="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Activos en Colombia</span>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Registros de Auditoría</span>
+            <span class="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center"><i class="fa-solid fa-fingerprint"></i></span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span id="kpi-audit-count" class="font-display text-2xl font-extrabold">0</span>
+            <span class="text-xs text-slate-500">Eventos rastreados</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================================================================= -->
+      <!-- SECCIÓN 1: GESTIÓN DE INVENTARIO + AUDITORÍA DE DISPOSITIVO/LUGAR -->
+      <!-- ================================================================= -->
+      <section id="section-inventory" class="space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="font-display text-xl sm:text-2xl font-bold">Inventario del negocio</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Controla productos, insumos, existencias y fechas de vencimiento de tu negocio.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button onclick="openProductModal()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold shadow-md shadow-indigo-600/20 transition flex items-center gap-2">
+              <i class="fa-solid fa-plus"></i>
+              <span>Registrar Producto o Insumo</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tabla / Tarjetas de Inventario -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+          <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="relative flex-1 max-w-md">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+              <input type="text" id="inventory-search" oninput="renderInventory()" placeholder="Buscar producto o insumo..." class="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-500" />
+            </div>
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 font-medium">
+                <i class="fa-solid fa-laptop text-indigo-500"></i> Dispositivo actual: <strong id="current-device-label" class="text-slate-700 dark:text-slate-200">Detectando...</strong>
+              </span>
+            </div>
+          </div>
+
+          <div class="px-4 pt-4 flex flex-wrap gap-2" role="tablist" aria-label="Filtrar inventario">
+            <button type="button" onclick="setInventoryView('all')" id="inventory-tab-all"
+              class="inventory-filter-tab px-3.5 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white">Todos los productos</button>
+            <button type="button" onclick="setInventoryView('expiring')" id="inventory-tab-expiring"
+              class="inventory-filter-tab px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+              <i class="fa-regular fa-clock mr-1"></i>Por vencer (30 días)
+            </button>
+            <button type="button" onclick="setInventoryView('expired')" id="inventory-tab-expired"
+              class="inventory-filter-tab px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i>Vencidos
+            </button>
+          </div>
+          <div id="inventory-view-caption" class="px-4 pt-2 text-xs text-slate-500 dark:text-slate-400">
+            Consulta todos los productos e insumos registrados.
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                  <th class="py-3.5 px-4 font-semibold">Producto / Categoría</th>
+                  <th class="py-3.5 px-4 font-semibold">Precio (COP)</th>
+                  <th class="py-3.5 px-4 font-semibold">Stock & Estado</th>
+                  <th class="py-3.5 px-4 font-semibold">Vencimiento</th>
+                  <th class="py-3.5 px-4 font-semibold">Última Modificación (Auditoría)</th>
+                  <th class="py-3.5 px-4 font-semibold text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Bitácora Forense de Auditoría (Creación, Edición y Eliminación de Archivos/Productos) -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-5">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <div>
+                <h3 class="font-display font-bold text-base">Bitácora de Auditoría de Dispositivo, Lugar y Hora</h3>
+                <p class="text-xs text-slate-500">Registro de cada creación, modificación o eliminación realizada por los usuarios autorizados del negocio.</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="audit-log-list" class="space-y-2.5 max-h-72 overflow-y-auto pr-1"></div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- SECCIÓN 2: DIRECTORIO DE PROVEEDORES + MAPA DE COLOMBIA + CHAT    -->
+      <!-- ================================================================= -->
+      <section id="section-directory" class="hidden space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2.5 mb-1">
+              <button onclick="goToDashboardHome()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-200/80 hover:bg-slate-300/80 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Volver al Inicio</span>
+              </button>
+            </div>
+            <h2 class="font-display text-xl sm:text-2xl font-bold">Red Comercial de Mayoristas y Minoristas en Colombia</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Busca proveedores de demostración por ciudad, departamento o producto y visualízalos en el mapa. Los proveedores reales aparecerán al conectar sus registros empresariales.</p>
+          </div>
+          <div id="nearby-filter-banner" class="hidden items-center gap-2 px-3.5 py-2 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-xs font-semibold text-rose-700 dark:text-rose-300">
+            <i class="fa-solid fa-truck-fast"></i>
+            <span id="nearby-filter-text">Mostrando proveedores cercanos para reposición</span>
+            <button onclick="clearNearbyFilter()" class="ml-2 underline hover:text-rose-900">Ver todos</button>
+          </div>
+        </div>
+
+        <!-- Filtros del Buscador -->
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Buscar proveedor o producto</label>
+            <div class="relative">
+              <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              <input type="text" id="dir-search" oninput="renderSuppliers()" placeholder="Ej. Café, Textiles, Arroz, Cali..." class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-500" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Tipo de Empresa</label>
+            <select id="dir-role" onchange="renderSuppliers()" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="ALL">Todos (Mayoristas y Minoristas)</option>
+              <option value="Mayorista">Solo Mayoristas</option>
+              <option value="Minorista">Solo Minoristas</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Departamento (Colombia)</label>
+            <select id="dir-department" onchange="populateCities('dir-department', 'dir-city', true); renderSuppliers();" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="ALL">Todos los Departamentos (32 + Bogotá)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Ciudad / Municipio</label>
+            <select id="dir-city" onchange="renderSuppliers()" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="ALL">Todas las Ciudades</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Mapa Interactivo de Ubicación de Clientes Suscritos + Lista de Tarjetas -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Mapa Visual de Radar Comercial de Colombia -->
+          <div class="lg:col-span-5 bg-slate-900 text-white rounded-2xl border border-slate-800 p-5 flex flex-col justify-between relative overflow-hidden min-h-[420px]">
+            <div class="relative z-10 flex items-center justify-between mb-3">
+              <div>
+                <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-400">Geolocalización en Vivo</span>
+                <h3 class="font-display font-bold text-base">Mapa de Proveedores (Colombia)</h3>
+              </div>
+              <span class="text-xs bg-white/10 px-2.5 py-1 rounded-lg font-medium"><i class="fa-solid fa-map-location-dot text-emerald-400 mr-1"></i> Mapa interactivo</span>
+            </div>
+
+            <!-- Lienzo Estilizado de Mapa de Colombia con Pines Interactivos -->
+            <div class="relative flex-1 rounded-xl border border-slate-700 my-2 overflow-hidden bg-slate-100 min-h-[330px]">
+              <div id="suppliers-leaflet-map" class="absolute inset-0 z-0" role="application"
+                aria-label="Mapa interactivo de proveedores en Colombia"></div>
+              <div class="absolute left-3 top-3 z-[500] flex flex-col gap-2">
+                <button type="button" onclick="locateCurrentPosition()"
+                  class="rounded-xl bg-white/95 hover:bg-white text-slate-800 shadow-lg border border-slate-200 px-3 py-2 text-xs font-bold">
+                  <i class="fa-solid fa-location-crosshairs text-indigo-600 mr-1"></i> Mi ubicación GPS
+                </button>
+                <span id="supplier-map-status" class="max-w-[220px] rounded-lg bg-slate-950/85 text-white px-2.5 py-1.5 text-[10px] shadow">
+                  Cargando mapa y proveedores…
+                </span>
+              </div>
+            </div>
+
+            <div class="relative z-10 flex items-center justify-between text-xs text-slate-400 pt-2">
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block"></span> Mayorista</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Minorista</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> Con Promoción</span>
+            </div>
+          </div>
+
+          <!-- Grid de Tarjetas de Proveedores con Botón Directo de Chat -->
+          <div class="lg:col-span-7 space-y-4">
+            <div id="suppliers-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- SECCIÓN 3: ANALÍTICA DE LO MÁS VENDIDO (MAYORISTAS Y MINORISTAS)  -->
+      <!-- ================================================================= -->
+      <section id="section-analytics" class="hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2.5 mb-1">
+              <button onclick="goToDashboardHome()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-200/80 hover:bg-slate-300/80 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Volver al Inicio</span>
+              </button>
+            </div>
+            <h2 class="font-display text-xl sm:text-2xl font-bold">Inteligencia de Mercado: Lo Más Vendido</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Análisis comparativo de rotación de productos para Mayoristas y Minoristas en Colombia.</p>
+          </div>
+          <div id="analytics-pro-badge" class="hidden px-3.5 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+            <i class="fa-solid fa-crown mr-1"></i> Analítica Pro Desbloqueada
+          </div>
+        </div>
+
+        <!-- Bloqueo suave si es Plan Gratis -->
+        <div id="analytics-free-lock" class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="space-y-1.5">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-400"><i class="fa-solid fa-lock mr-1"></i> Función Avanzada del Plan Pro</span>
+            <h3 class="font-display text-lg font-bold">Desbloquea el ranking completo de lo más vendido por ciudad y canal</h3>
+            <p class="text-sm text-slate-300">Conoce exactamente qué productos tienen mayor demanda en Mayoristas y Minoristas de Colombia antes que tu competencia.</p>
+          </div>
+          <button onclick="openPricingModal()" class="shrink-0 px-5 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-sm shadow-lg transition">
+            Ver Planes Pro en COP
+          </button>
+        </div>
+
+        <!-- Configuración de ciudades para los gráficos -->
+        <div id="analytics-city-editor" class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-indigo-200 dark:border-indigo-900 shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 class="font-display font-bold text-base"><i class="fa-solid fa-sliders text-indigo-500 mr-2"></i>Personalizar ciudades del gráfico</h3>
+              <p class="text-xs text-slate-500 mt-1">Agrega, quita o cambia las ciudades que quieres comparar en el gráfico nacional.</p>
+            </div>
+            <span class="text-[11px] text-slate-500">Los cambios se guardan en este navegador.</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-3 items-end">
+            <div>
+              <label for="analytics-department-select" class="block text-xs font-semibold mb-1.5">Departamento</label>
+              <select id="analytics-department-select" onchange="populateAnalyticsCities()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-sm"></select>
+            </div>
+            <div>
+              <label for="analytics-city-select" class="block text-xs font-semibold mb-1.5">Ciudad / municipio</label>
+              <select id="analytics-city-select" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-sm"></select>
+            </div>
+            <button type="button" onclick="addAnalyticsCity()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold"><i class="fa-solid fa-plus mr-1"></i>Agregar</button>
+          </div>
+          <div>
+            <p class="text-xs font-semibold mb-2">Ciudades incluidas en el gráfico</p>
+            <div id="analytics-selected-cities" class="flex flex-wrap gap-2"></div>
+          </div>
+        </div>
+
+        <!-- Gráficos Interactivos -->
+        <div id="analytics-charts-container" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <h3 class="font-display font-bold text-base mb-1">Top Productos Más Vendidos (Unidades / Mes)</h3>
+            <p class="text-xs text-slate-500 mb-4">Comparativa de volumen entre canal Mayorista y Minorista</p>
+            <div class="h-72">
+              <canvas id="topProductsChart"></canvas>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <h3 class="font-display font-bold text-base mb-1">Demanda Comercial por Ciudad en Colombia</h3>
+            <p class="text-xs text-slate-500 mb-4">Comparación ilustrativa de ciudades seleccionadas; conecta ventas reales para obtener métricas verificadas</p>
+            <div class="h-72">
+              <canvas id="citiesDemandChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+
+  <!-- MODAL: REGISTRO Y EDICIÓN DE PRODUCTOS / INSUMOS -->
+  <div id="product-modal" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl my-8">
+      <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div>
+          <h3 id="product-modal-title" class="font-display font-bold text-xl">Registrar Producto o Insumo</h3>
+          <p class="text-xs text-slate-500 mt-1">Incluye la fecha de vencimiento cuando aplique, especialmente para alimentos e ingredientes.</p>
+        </div>
+        <button type="button" onclick="closeProductModal()" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center" aria-label="Cerrar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <form id="product-form" onsubmit="saveProduct(event)" class="p-5 space-y-4">
+        <input type="hidden" id="prod-id">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="prod-name" class="block text-xs font-semibold mb-1.5">Nombre del producto o insumo</label>
+            <input id="prod-name" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+          </div>
+          <div>
+            <label for="prod-category" class="block text-xs font-semibold mb-1.5">Categoría</label>
+            <input id="prod-category" required list="business-product-categories" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+            <datalist id="business-product-categories">
+              <option value="Frutas y verduras"><option value="Carnes y pescados"><option value="Lácteos y huevos">
+              <option value="Abarrotes"><option value="Bebidas"><option value="Congelados">
+              <option value="Panadería y pastelería"><option value="Ingredientes de cocina"><option value="Aseo y limpieza">
+              <option value="Empaques y desechables"><option value="Licores"><option value="Textil y confección">
+            </datalist>
+          </div>
+          <div>
+            <label for="prod-price" class="block text-xs font-semibold mb-1.5">Precio / costo (COP)</label>
+            <input type="number" id="prod-price" min="0" step="1" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+          </div>
+          <div>
+            <label for="prod-stock" class="block text-xs font-semibold mb-1.5">Existencias</label>
+            <input type="number" id="prod-stock" min="0" step="0.01" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+          </div>
+          <div>
+            <label for="prod-min-stock" class="block text-xs font-semibold mb-1.5">Límite mínimo de existencias</label>
+            <input type="number" id="prod-min-stock" min="0" step="0.01" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+          </div>
+          <div>
+            <label for="prod-expiry" class="block text-xs font-semibold mb-1.5">Fecha de vencimiento (opcional)</label>
+            <input type="date" id="prod-expiry" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+          </div>
+          <div>
+            <label for="prod-discount" class="block text-xs font-semibold mb-1.5">Descuento promocional (%)</label>
+            <input type="number" id="prod-discount" min="0" max="100" value="0" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeProductModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm font-semibold">Cancelar</button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold">Guardar producto</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 2: PLANES DE PAGO EN PESOS COLOMBIANOS (1 MES, 6 MESES, 1 AÑO)  -->
+  <!-- ===================================================================== -->
+  <div id="pricing-modal" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden my-8">
+      <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Suscripciones Mercaflow Colombia</span>
+          <h3 class="font-display font-extrabold text-xl sm:text-2xl mt-0.5">Planes Comerciales en Pesos Colombianos (COP)</h3>
+        </div>
+        <button onclick="closePricingModal()" class="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 hover:text-slate-900"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="p-6 space-y-6">
+        <!-- Plan Gratis vs Planes Pro de 1 Mes, 6 Meses y 1 Año con Descuento Porcentual -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Plan Gratis -->
+          <div class="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Básico</span>
+              <h4 class="font-display font-bold text-lg mt-2">Plan Gratis</h4>
+              <div class="mt-2">
+                <span class="font-display text-2xl font-extrabold">$0</span>
+                <span class="text-xs text-slate-500"> COP</span>
+              </div>
+              <ul class="mt-4 space-y-2 text-xs text-slate-600 dark:text-slate-400">
+                <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Hasta 3 productos en bodega</li>
+                <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Auditoría básica</li>
+                <li class="text-slate-400"><i class="fa-solid fa-xmark text-rose-400 mr-1.5"></i>Sin analítica de más vendidos</li>
+                <li class="text-slate-400"><i class="fa-solid fa-xmark text-rose-400 mr-1.5"></i>Sin alertas prioritarias</li>
+              </ul>
+            </div>
+            <button onclick="activateFreePlan()" class="mt-5 w-full py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+              Usar Versión Gratis
+            </button>
+          </div>
+
+          <!-- Pro 1 Mes (0% dto) -->
+          <div class="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">Tarifa Plena</span>
+              <h4 class="font-display font-bold text-lg mt-2">Pro 1 Mes</h4>
+              <div class="mt-2">
+                <span class="font-display text-xl font-extrabold">$59.900</span>
+                <span class="text-xs text-slate-500"> COP/mes</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Facturación mensual sin permanencia</p>
+              <ul class="mt-3 space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
+                <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Inventario ilimitado</li>
+                <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Chat directo ilimitado</li>
+                <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Lo más vendido en tiempo real</li>
+              </ul>
+            </div>
+            <button onclick="selectProCheckout('Pro 1 Mes', 59900, 0)" class="mt-5 w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition">
+              Elegir 1 Mes
+            </button>
+          </div>
+
+          <!-- Pro 6 Meses (20% dto) -->
+          <div class="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300">Ahorra 20%</span>
+              <h4 class="font-display font-bold text-lg mt-2">Pro 6 Meses</h4>
+              <div class="mt-2">
+                <span class="font-display text-xl font-extrabold">$287.500</span>
+                <span class="text-xs text-slate-500"> COP</span>
+              </div>
+              <p class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold mt-1">Equivale a $47.900/mes (-20%)</p>
+              <ul class="mt-3 space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
+                <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Todo lo del Plan Pro</li>
+                <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Auditoría multi-dispositivo</li>
+                <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Soporte prioritario</li>
+              </ul>
+            </div>
+            <button onclick="selectProCheckout('Pro 6 Meses', 287500, 20)" class="mt-5 w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition">
+              Elegir 6 Meses
+            </button>
+          </div>
+
+          <!-- Pro 1 Año (35% dto - Más Popular) -->
+          <div class="p-4 rounded-2xl border-2 border-indigo-600 bg-indigo-50/40 dark:bg-indigo-950/30 flex flex-col justify-between relative">
+            <span class="absolute -top-3 right-3 bg-indigo-600 text-white text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full shadow">Mejor Valor -35%</span>
+            <div>
+              <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">Ahorra 35%</span>
+              <h4 class="font-display font-bold text-lg mt-2">Pro 1 Año</h4>
+              <div class="mt-2">
+                <span class="font-display text-xl font-extrabold">$467.200</span>
+                <span class="text-xs text-slate-500"> COP</span>
+              </div>
+              <p class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold mt-1">Solo $38.900/mes (-35%)</p>
+              <ul class="mt-3 space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
+                <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Todo ilimitado 12 meses</li>
+                <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Sello Proveedor Verificado</li>
+                <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Posicionamiento #1</li>
+              </ul>
+            </div>
+            <button onclick="selectProCheckout('Pro 1 Año (12 Meses)', 467200, 35)" class="mt-5 w-full py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-emerald-600 hover:opacity-95 text-white text-xs font-bold shadow-md transition">
+              Activar Plan Anual
+            </button>
+          </div>
+        </div>
+
+        <!-- Pasarela de Pago Simulada (Nequi, Bancolombia, PSE, Tarjeta) -->
+        <div id="checkout-panel" class="hidden p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400">Pasarela de Pago Colombia</span>
+              <h4 id="checkout-plan-name" class="font-display font-bold text-base">Plan Seleccionado</h4>
+              <p id="checkout-plan-price" class="text-sm text-slate-600 dark:text-slate-300 mt-0.5"></p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="confirmProPayment('Nequi')" class="px-3.5 py-2 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-700 text-white text-xs font-bold transition">Pagar con Nequi</button>
+              <button onclick="confirmProPayment('Bancolombia / PSE')" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold transition">PSE / Bancolombia</button>
+              <button onclick="confirmProPayment('Tarjeta Crédito')" class="px-3.5 py-2 rounded-xl bg-slate-900 dark:bg-slate-700 hover:opacity-90 text-white text-xs font-bold transition">Tarjeta</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 4: AJUSTES DE INTERFAZ, TIPOGRAFÍA, MODO IA E INFORMACIÓN       -->
+  <!-- ===================================================================== -->
+  <div id="settings-modal" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden my-6">
+      <div class="p-5 sm:p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow">
+            <i class="fa-solid fa-sliders"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-lg sm:text-xl">Ajustes de Personalización e Información</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Configura apariencia, tipografía, asistente IA y consulta detalles del software</p>
+          </div>
+        </div>
+        <button onclick="closeSettingsModal()" class="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 hover:text-slate-900 dark:hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Pestañas internas dentro de Ajustes -->
+      <div class="px-6 pt-4 border-b border-slate-200 dark:border-slate-800 flex gap-2">
+        <button
+          type="button"
+          id="settings-tab-prefs"
+          onclick="switchSettingsTab('prefs')"
+          class="px-4 py-2.5 text-xs sm:text-sm font-bold border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 transition"
+        >
+          <i class="fa-solid fa-palette mr-1.5"></i>Apariencia, Fuente e IA
+        </button>
+        <button
+          type="button"
+          id="settings-tab-info"
+          onclick="switchSettingsTab('info')"
+          class="px-4 py-2.5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white transition"
+        >
+          <i class="fa-solid fa-circle-info mr-1.5 text-emerald-500"></i>Información (Gratis vs. PRO)
+        </button>
+      </div>
+
+      <!-- CONTENIDO 1 DE AJUSTES: TEMA, TIPOGRAFÍA Y MODO IA -->
+      <div id="settings-panel-prefs" class="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+        <!-- 1. Modo Oscuro y Claro -->
+        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h4 class="font-bold text-sm">Modo de Tema Visual</h4>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Alterna entre interfaz clara diurna o modo oscuro nocturno.</p>
+          </div>
+          <div class="flex items-center gap-2 bg-white dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+            <button type="button" id="btn-theme-light" onclick="setThemeMode('light')" class="px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
+              <i class="fa-solid fa-sun text-amber-500"></i> Claro
+            </button>
+            <button type="button" id="btn-theme-dark" onclick="setThemeMode('dark')" class="px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
+              <i class="fa-solid fa-moon text-indigo-400"></i> Oscuro
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Tipografía Personalizable en Tiempo Real -->
+        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="font-bold text-sm">Tipografía y Lectura</h4>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Los cambios de tamaño, grosor y fuente se aplican al instante en toda la aplicación.</p>
+            </div>
+            <button type="button" onclick="resetTypographySettings()" class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Restablecer</button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <!-- Tamaño de Letra -->
+            <div>
+              <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1.5">Tamaño de Letra</label>
+              <select id="setting-font-size" onchange="applyTypographyFromControls()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold outline-none">
+                <option value="14px">Pequeño (14px)</option>
+                <option value="16px" selected>Normal (16px)</option>
+                <option value="18px">Grande (18px)</option>
+                <option value="20px">Extra Grande (20px)</option>
+              </select>
+            </div>
+
+            <!-- Grosor de Fuente -->
+            <div>
+              <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1.5">Grosor de Fuente</label>
+              <select id="setting-font-weight" onchange="applyTypographyFromControls()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold outline-none">
+                <option value="300">Ligero (300)</option>
+                <option value="400" selected>Normal (400)</option>
+                <option value="500">Medio (500)</option>
+                <option value="700">Negrita (700)</option>
+              </select>
+            </div>
+
+            <!-- Tipo de Fuente -->
+            <div>
+              <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1.5">Tipo de Fuente</label>
+              <select id="setting-font-family" onchange="applyTypographyFromControls()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold outline-none">
+                <option value="'Inter', sans-serif" selected>Inter (Sans-Serif Moderna)</option>
+                <option value="'Roboto', sans-serif">Roboto (Geométrica)</option>
+                <option value="'Merriweather', serif">Merriweather (Serif Editorial)</option>
+                <option value="'JetBrains Mono', monospace">JetBrains Mono (Monoespaciada)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Activar o Desactivar Modo IA -->
+        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-start gap-3">
+            <div class="w-9 h-9 rounded-xl bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 mt-0.5">
+              <i class="fa-solid fa-robot"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-sm">Asistente Inteligente (Modo IA)</h4>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Activa sugerencias de reposición, mensajes de apoyo comercial y guía estratégica para empresas.</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            id="btn-toggle-ai"
+            onclick="toggleAiMode()"
+            class="shrink-0 px-4 py-2.5 rounded-xl text-xs font-bold transition shadow-sm"
+          >
+            Modo IA: Activado
+          </button>
+        </div>
+
+        <!-- Acceso Directo al Apartado de Información -->
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-indigo-50 to-emerald-50 dark:from-indigo-950/40 dark:to-emerald-950/40 border border-indigo-200 dark:border-indigo-800 flex items-center justify-between gap-4">
+          <div>
+            <h4 class="font-bold text-sm text-indigo-950 dark:text-white">¿Quieres conocer los beneficios de la versión PRO vs. Gratis?</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300">Consulta la comparativa completa y el modelo de valor de Mercaflow Colombia.</p>
+          </div>
+          <button
+            type="button"
+            onclick="switchSettingsTab('info')"
+            class="shrink-0 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow transition"
+          >
+            <i class="fa-solid fa-circle-info mr-1.5"></i>Ver Información
+          </button>
+        </div>
+      </div>
+
+      <!-- CONTENIDO 2 DE AJUSTES: APARTADO DE INFORMACIÓN (GRATIS VS PRO) -->
+      <div id="settings-panel-info" class="hidden p-6 space-y-5 max-h-[70vh] overflow-y-auto">
+        <div class="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800">
+          <h4 class="font-display font-extrabold text-base text-indigo-900 dark:text-indigo-200 flex items-center gap-2">
+            <i class="fa-solid fa-rocket text-indigo-600 dark:text-indigo-400"></i>
+            <span>¿Por qué elegir la versión PRO de Mercaflow Colombia?</span>
+          </h4>
+          <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-2 leading-relaxed">
+            Mientras que la versión gratuita permite digitalizar un catálogo inicial de prueba, la <strong>versión PRO</strong> convierte tu negocio en una operación conectada a escala nacional: elimina topes de inventario, desbloquea inteligencia comercial sobre <strong>lo más vendido en mayoristas y minoristas de Colombia</strong>, envía alertas automáticas de promociones a toda la red de compradores y prioriza tu empresa en el mapa geolocalizado para cerrar ventas B2B/B2C más rápido.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Columna Versión Gratis -->
+          <div class="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50">
+            <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Nivel Inicial</span>
+            <h5 class="font-display font-bold text-lg mt-2">¿Qué incluye la Versión Gratis?</h5>
+            <ul class="mt-3 space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+              <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i><span>Gestión básica de inventario limitada hasta <strong>3 productos activos</strong>.</span></li>
+              <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i><span>Registro estándar de auditoría de última modificación.</span></li>
+              <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i><span>Acceso al directorio básico de departamentos y municipios de Colombia.</span></li>
+              <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i><span>Mensajería directa estándar con proveedores.</span></li>
+            </ul>
+          </div>
+
+          <!-- Columna Versión PRO -->
+          <div class="p-5 rounded-2xl border-2 border-emerald-500/60 bg-emerald-50/30 dark:bg-emerald-950/20">
+            <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500 text-white">Todo Incluido + Mejoras</span>
+            <h5 class="font-display font-bold text-lg mt-2">¿Qué incluye la Versión PRO?</h5>
+            <p class="text-xs font-semibold text-emerald-700 dark:text-emerald-300 mt-1">Incluye todo lo de la versión Gratis, más estas mejoras avanzadas:</p>
+            <ul class="mt-3 space-y-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-200">
+              <li class="flex items-start gap-2"><i class="fa-solid fa-crown text-amber-500 mt-1"></i><span><strong>Inventario 100% Ilimitado:</strong> Registra miles de referencias mayoristas o minoristas sin restricciones.</span></li>
+              <li class="flex items-start gap-2"><i class="fa-solid fa-crown text-amber-500 mt-1"></i><span><strong>Auditoría Forense Completa:</strong> Trazabilidad histórica inmutable con dispositivo, ubicación y hora exacta en cada creación, edición o eliminación.</span></li>
+              <li class="flex items-start gap-2"><i class="fa-solid fa-crown text-amber-500 mt-1"></i><span><strong>Analítica Predictiva de Lo Más Vendido:</strong> Gráficos comparativos de rotación por canal y ciudad en Colombia.</span></li>
+              <li class="flex items-start gap-2"><i class="fa-solid fa-crown text-amber-500 mt-1"></i><span><strong>Alertas Instantáneas de Promociones:</strong> Notificación inmediata a compradores cuando publicas descuentos.</span></li>
+              <li class="flex items-start gap-2"><i class="fa-solid fa-crown text-amber-500 mt-1"></i><span><strong>Red Prioritaria de Reposición Cercana & Asistente IA:</strong> Conexión automática con proveedores cercanos ante stock bajo/agotado y copiloto comercial IA.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+          <button type="button" onclick="switchSettingsTab('prefs')" class="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold">
+            ← Volver a Ajustes
+          </button>
+          <button type="button" onclick="closeSettingsModal(); openPricingModal();" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow">
+            Ver Tarifas PRO (1 Mes, 6 Meses y 1 Año en COP)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 3: CHAT DIRECTO B2B/B2C CON PROVEEDORES MAYORISTAS/MINORISTAS   -->
+  <!-- ===================================================================== -->
+  <div id="chat-modal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col h-[540px] overflow-hidden">
+      <!-- Cabecera del Chat -->
+      <div class="p-4 border-b border-slate-200 dark:border-slate-800 bg-indigo-600 text-white flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div id="chat-avatar" class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center font-bold text-base">PR</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="chat-supplier-name" class="font-display font-bold text-sm">Proveedor</h3>
+              <span id="chat-supplier-role" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/20">Mayorista</span>
+            </div>
+            <p id="chat-supplier-location" class="text-xs text-indigo-100 flex items-center gap-1">
+              <i class="fa-solid fa-location-dot"></i> Ciudad, Departamento
+            </p>
+          </div>
+        </div>
+        <button onclick="closeChatModal()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Mensajes -->
+      <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50 dark:bg-slate-950/60"></div>
+
+      <!-- Respuestas Rápidas Comerciales -->
+      <div class="px-3 py-2 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex gap-1.5 overflow-x-auto">
+        <button type="button" onclick="sendQuickChat('Hola, ¿tienen disponibilidad inmediata para despacho hoy?')" class="shrink-0 text-[11px] font-medium px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950 text-slate-700 dark:text-slate-300 transition">¿Disponibilidad hoy?</button>
+        <button type="button" onclick="sendQuickChat('¿Cuál es el precio mayorista por volumen y descuento vigente?')" class="shrink-0 text-[11px] font-medium px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950 text-slate-700 dark:text-slate-300 transition">Cotizar por volumen</button>
+        <button type="button" onclick="sendQuickChat('¿Hacen envíos a mi ciudad?')" class="shrink-0 text-[11px] font-medium px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950 text-slate-700 dark:text-slate-300 transition">Envío nacional</button>
+      </div>
+
+      <!-- Input de Mensaje -->
+      <form onsubmit="handleChatSend(event)" class="p-3 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center gap-2">
+        <input type="text" id="chat-input" placeholder="Escribe un mensaje directo al proveedor..." required class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-500" />
+        <button type="submit" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm transition">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- JAVASCRIPT: BASE DE DATOS COLOMBIA, AUDITORÍA, INVENTARIO Y CHAT      -->
+  <!-- ===================================================================== -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="app.js"></script>
+</body>
+</html>

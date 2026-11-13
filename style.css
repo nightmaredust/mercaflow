@@ -1,0 +1,61 @@
+:root {
+      --app-font-family: 'Inter', sans-serif;
+      --app-font-size: 16px;
+      --app-font-weight: 400;
+    }
+    html {
+      font-size: var(--app-font-size);
+    }
+    body {
+      font-family: var(--app-font-family);
+      font-weight: var(--app-font-weight);
+      overflow-x: hidden;
+    }
+    /* Transición suave al alternar entre modo claro y oscuro. */
+    html.theme-animating,
+    html.theme-animating body,
+    html.theme-animating body * {
+      transition-property: background-color, color, border-color, box-shadow, fill, stroke;
+      transition-duration: 420ms;
+      transition-timing-function: ease-in-out;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html.theme-animating,
+      html.theme-animating body,
+      html.theme-animating body * {
+        transition-duration: 0.01ms;
+      }
+    }
+    h1, h2, h3, .font-display {
+      font-family: var(--app-font-family);
+    }
+    /* Custom subtle scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.4);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 0.7);
+    }
+    /* Map pulse animation */
+    @keyframes radarPulse {
+      0% { transform: scale(0.95); opacity: 0.9; }
+      70% { transform: scale(2.2); opacity: 0; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+    .pin-pulse::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 9999px;
+      background-color: currentColor;
+      animation: radarPulse 2s infinite;
+      z-index: 0;
+    }
